@@ -1,0 +1,41 @@
+{
+  "+warp": {
+    "bypassList": [
+      { "conditionType": "BypassCondition", "pattern": "127.0.0.1" },
+      { "conditionType": "BypassCondition", "pattern": "[::1]" },
+      { "conditionType": "BypassCondition", "pattern": "localhost" }
+    ],
+    "color": "#f6851b",
+    "fallbackProxy": { "host": "127.0.0.1", "port": 40000, "scheme": "socks5" },
+    "name": "warp",
+    "profileType": "FixedProfile",
+    "revision": "19a2b3c4d5e"
+  },
+  "+youtube-ru": {
+    "color": "#99dd99",
+    "defaultProfileName": "direct",
+    "name": "youtube-ru",
+    "profileType": "SwitchProfile",
+    "rules": [
+      { "condition": { "conditionType": "HostWildcardCondition", "pattern": "*.youtube.com" }, "profileName": "warp" },
+      { "condition": { "conditionType": "HostWildcardCondition", "pattern": "*.googlevideo.com" }, "profileName": "warp" },
+      { "condition": { "conditionType": "HostWildcardCondition", "pattern": "*.ytimg.com" }, "profileName": "warp" },
+      { "condition": { "conditionType": "HostWildcardCondition", "pattern": "*.ggpht.com" }, "profileName": "warp" },
+      { "condition": { "conditionType": "HostWildcardCondition", "pattern": "youtu.be" }, "profileName": "warp" },
+      { "condition": { "conditionType": "HostWildcardCondition", "pattern": "*.youtube-nocookie.com" }, "profileName": "warp" },
+      { "condition": { "conditionType": "HostWildcardCondition", "pattern": "*.youtubei.googleapis.com" }, "profileName": "warp" }
+    ],
+    "revision": "19a2b3c4d5f"
+  },
+  "-addConditionsToBottom": false,
+  "-confirmDeletion": true,
+  "-downloadInterval": 1440,
+  "-enableQuickSwitch": false,
+  "-quickSwitchProfiles": [],
+  "-refreshOnProfileChange": true,
+  "-revertProxyChanges": true,
+  "-showExternalProfile": true,
+  "-showInspectMenu": true,
+  "-startupProfileName": "youtube-ru",
+  "schemaVersion": 2
+}
