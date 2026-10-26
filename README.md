@@ -59,19 +59,19 @@ chmod +x linux/warp-ru.sh
 ./linux/warp-ru.sh --install
 ```
 
-`-Install` / `--install` makes it run automatically at every login, then runs it once now. Expect around 5 to 40 reconnects before it gets `RU`. Leave out the flag to run it just once.
+On Windows, `-Install` adds a scheduled task that checks at login, 30 seconds after the PC wakes up, and every 10 minutes. It reconnects WARP only when YouTube no longer sees `RU`, and each check is one small (~3 KB) request. On Linux, `--install` runs the script at every login. Both also run it once right away. Expect around 5 to 40 reconnects before it gets `RU`. Leave out the flag to run it just once.
 
 | | Windows | Linux |
 |---|---|---|
 | Reconnect until RU | `warp-ru.ps1` | `warp-ru.sh` |
 | Only show current country | `warp-ru.ps1 -Check` | `warp-ru.sh --check` |
-| Run at every login | `warp-ru.ps1 -Install` | `warp-ru.sh --install` |
-| Stop running at login | `warp-ru.ps1 -Uninstall` | `warp-ru.sh --uninstall` |
-| Startup log | `%LOCALAPPDATA%\warp-ru\warp-ru.log` | `journalctl --user -u warp-ru` |
+| Keep it RU automatically | `warp-ru.ps1 -Install` (login, wake, every 10 min) | `warp-ru.sh --install` (login only) |
+| Stop the automatic runs | `warp-ru.ps1 -Uninstall` | `warp-ru.sh --uninstall` |
+| Log | `%LOCALAPPDATA%\warp-ru\warp-ru.log` (one line per check) | `journalctl --user -u warp-ru` |
 
 Both accept `-MaxTries N` / `--max-tries N` (default 40).
 
-If you move the repo folder after `-Install`, run `-Install` again so startup points to the new location.
+If you move the repo folder after `-Install`, run `-Install` again so the task points to the new location. If you installed the first version (a shortcut in the Startup folder), run `-Install` again too: it replaces the shortcut with the scheduled task.
 
 ### 3. Send YouTube through WARP in your browser
 
@@ -85,7 +85,8 @@ Open youtube.com: a small **RU** should appear next to the YouTube logo.
 
 ## Troubleshooting
 
-- **Ads are back / no RU next to the logo**: WARP probably reconnected and got an Estonian address (after sleep, a network change, or someone clicking reconnect in the WARP app). Run the script again.
+- **Ads are back / no RU next to the logo**: WARP reconnected and got an Estonian address. That happens after sleep or a network change, and sometimes on its own when WARP's tunnel drops. With `-Install` on Windows it fixes itself within 10 minutes; otherwise run the script again.
+- **WARP keeps coming back on**: with `-Install` on Windows, the check reconnects WARP if you turn it off. Run `-Uninstall` to stop that.
 - **"No RU address after 40 tries"**: try again later, or with `-MaxTries 80`. If it never works anymore, Google has probably updated its location data and the trick is dead.
 - **YouTube doesn't load at all**: WARP isn't connected. Run the script with `-Check` / `--check`, or switch ZeroOmega to `[Direct]` for a moment.
 - **Only YouTube is proxied**: the rule list is `*.youtube.com`, `*.googlevideo.com`, `*.ytimg.com`, `*.ggpht.com`, `youtu.be`, `*.youtube-nocookie.com`, `*.youtubei.googleapis.com`. Everything else goes direct.
