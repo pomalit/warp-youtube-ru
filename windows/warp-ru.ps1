@@ -87,10 +87,12 @@ function Test-WarpConnected { [bool]((Invoke-Warp status) -match 'Status update:
 
 function Get-YouTubeCountry {
     # sw.js_data is ~3 KB and starts with the country YouTube sees; the front page is ~1 MB
-    $data = curl.exe -s --max-time 20 --socks5-hostname $proxy -H 'Accept-Language: en-US' https://www.youtube.com/sw.js_data
+    # SOCKS4 over IPv4, same as the browser: WARP's IPv4 and IPv6 exits geolocate differently,
+    # and when WARP resolves the name itself it picks IPv6
+    $data = curl.exe -s -4 --max-time 20 --socks4 $proxy -H 'Accept-Language: en-US' https://www.youtube.com/sw.js_data
     $m = [regex]::Match("$data", '"yt\.sw\.adr",null,\[\[\["[^"]*","([A-Z]{2})"')
     if ($m.Success) { return $m.Groups[1].Value }
-    $html = curl.exe -s --max-time 20 --socks5-hostname $proxy -H 'Accept-Language: en-US' https://www.youtube.com/
+    $html = curl.exe -s -4 --max-time 20 --socks4 $proxy -H 'Accept-Language: en-US' https://www.youtube.com/
     ([regex]::Match("$html", '"GL":"([A-Z]{2})"')).Groups[1].Value
 }
 

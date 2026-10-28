@@ -78,7 +78,9 @@ warp() { warp-cli --accept-tos "$@"; }
 warp_connected() { warp status 2>/dev/null | grep -q 'Status update: Connected'; }
 
 youtube_country() {
-    curl -s --max-time 20 --socks5-hostname "$PROXY" -H 'Accept-Language: en-US' https://www.youtube.com/ \
+    # SOCKS4 over IPv4, same as the browser: WARP's IPv4 and IPv6 exits geolocate differently,
+    # and when WARP resolves the name itself it picks IPv6
+    curl -s -4 --max-time 20 --socks4 "$PROXY" -H 'Accept-Language: en-US' https://www.youtube.com/ \
         | grep -o '"GL":"[A-Z][A-Z]"' | head -n 1 | cut -d '"' -f 4
 }
 

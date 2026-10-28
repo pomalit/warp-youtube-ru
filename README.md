@@ -8,6 +8,7 @@ Make YouTube think you are in Russia, so it shows **no ads** and an ad blocker i
 - Cloudflare WARP is a free VPN. From Estonia it exits through Cloudflare's Tallinn servers. Most of those addresses look Estonian to Google, but some (roughly 1 in 10) look Russian.
 - The script keeps reconnecting WARP until YouTube says `RU`, then stops. The address stays Russian as long as WARP stays connected.
 - WARP runs in **proxy mode**: it only opens a local port (`127.0.0.1:40000`) and doesn't touch the rest of your traffic. A browser extension sends just the YouTube domains through that port.
+- The browser talks to that port over **SOCKS4**, which makes it look up YouTube's address itself, over IPv4. With SOCKS5, WARP looks it up and goes out over IPv6, and Google places WARP's IPv6 addresses in Estonia even while the IPv4 one is in Russia.
 
 Tested from Estonia in October 2026: on a WARP `RU` address, 5 of 5 popular videos had no ads scheduled; on the normal Estonian connection, every one had 2.
 
@@ -85,6 +86,7 @@ Open youtube.com: a small **RU** should appear next to the YouTube logo.
 
 ## Troubleshooting
 
+- **The script never gets RU, but YouTube sometimes shows RU anyway**: you set up an older version that used SOCKS5. Pull the repo, then in ZeroOmega open the **warp** profile, change **Protocol** to **SOCKS4**, and click **Apply changes** (or restore `browser/zeroomega-youtube-ru.bak` again).
 - **Ads are back / no RU next to the logo**: WARP reconnected and got an Estonian address. That happens after sleep or a network change, and sometimes on its own when WARP's tunnel drops. With `-Install` on Windows it fixes itself within 10 minutes; otherwise run the script again.
 - **WARP keeps coming back on**: with `-Install` on Windows, the check reconnects WARP if you turn it off. Run `-Uninstall` to stop that.
 - **"No RU address after 40 tries"**: try again later, or with `-MaxTries 80`. If it never works anymore, Google has probably updated its location data and the trick is dead.

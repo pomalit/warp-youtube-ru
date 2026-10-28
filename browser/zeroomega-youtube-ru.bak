@@ -6,7 +6,7 @@
       { "conditionType": "BypassCondition", "pattern": "localhost" }
     ],
     "color": "#f6851b",
-    "fallbackProxy": { "host": "127.0.0.1", "port": 40000, "scheme": "socks5" },
+    "fallbackProxy": { "host": "127.0.0.1", "port": 40000, "scheme": "socks4" },
     "name": "warp",
     "profileType": "FixedProfile",
     "revision": "19a2b3c4d5e"
